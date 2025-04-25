@@ -8,7 +8,13 @@
     "ic:install:data": "node canisters/scripts/ic.installcode.mjs",
     "ic:types": "node ./canisters/scripts/ic.types.js",
     "build": "npm run ic:types && cd studio && npm run build:ic",
-    "postbuild": "prettier --write providers/ic"
+    "postbuild": "prettier --write providers/ic",
+    "dev": "next dev",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug"
   },
   "workspaces": [
     "providers/*",

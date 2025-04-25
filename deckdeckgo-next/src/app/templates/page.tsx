@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
 import { TemplateShowcase } from '@/components/templates/TemplateShowcase';
+import Link from 'next/link';
 
 // This would typically come from your database or API
 const defaultTemplates = [
@@ -79,15 +80,16 @@ export default async function TemplatesPage() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {defaultTemplates.map((template) => (
-          <TemplateShowcase
+          <Link
             key={template.id}
-            template={template}
-            customTappable
-            onClick={() => {
-              // Handle template selection
-              console.log('Selected template:', template);
-            }}
-          />
+            href={`/editor/new?template=${template.id}`}
+            className="block"
+          >
+            <TemplateShowcase
+              template={template}
+              customTappable
+            />
+          </Link>
         ))}
       </div>
     </div>

@@ -1,42 +1,48 @@
 "use client";
 
-import { TemplateShowcaseProps } from '@/types/template';
-import { Skeleton } from './ui/skeleton';
+import { useState } from 'react';
+import { Template } from '@/types/template';
+import { Skeleton } from '@/components/ui/skeleton';
+
+interface TemplateShowcaseProps {
+  template: Template;
+  author?: string;
+  customTappable?: boolean;
+  onClick?: () => void;
+}
 
 export function TemplateShowcase({ template, author, customTappable, onClick }: TemplateShowcaseProps) {
-  const Element = template.data.tag;
+  const [loading, setLoading] = useState(true);
 
   return (
-    <div
-      className={`relative overflow-hidden rounded-lg bg-white shadow transition-all hover:shadow-md ${
-        customTappable ? 'cursor-pointer' : ''
-      }`}
+    <div 
+      className={`group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md ${customTappable ? 'cursor-pointer' : ''}`}
       onClick={onClick}
     >
       <div className="aspect-video w-full">
-        <div className="h-full w-full">
-          <Element>
-            {template.data.slots?.map((slot) => (
-              <Skeleton key={slot.name} className="h-4 w-3/5" slot={slot.name} />
-            ))}
-          </Element>
+        {loading && <Skeleton className="h-full w-full" />}
+        <div
+          className={`h-full w-full ${loading ? 'hidden' : 'block'}`}
+          onLoad={() => setLoading(false)}
+        >
+          {/* Template preview content */}
+          <div className="flex h-full items-center justify-center bg-gray-50 p-4">
+            <div className="text-center">
+              <h3 className="text-lg font-medium text-gray-900">{template.id}</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                {template.data.slots?.length || 0} editable sections
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <div className="p-4">
-        <h3 className="text-sm font-medium text-gray-900">{template.data.tag}</h3>
-        {author && template.data.author && (
-          <p className="mt-1 text-xs text-gray-500">
-            by{' '}
-            <a
-              href={template.data.author.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-indigo-600 hover:text-indigo-500"
-            >
-              {template.data.author.name}
-            </a>
-          </p>
-        )}
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-medium text-gray-900">{template.id}</h3>
+            {author && <p className="text-xs text-gray-500">by {author}</p>}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,37 +1,35 @@
-import React, { useEffect, useRef } from 'react';
-import { Navigation } from './Navigation';
+'use client';
 
-interface NavigationWrapperProps {
-  actions?: 'all' | 'none' | 'editor-less';
-  onMenuToggle?: () => void;
-  children?: React.ReactNode;
-}
+import * as React from 'react';
+import { usePathname } from 'next/navigation';
+import { registerLitComponents } from '@/lib/lit-init';
 
-export const NavigationWrapper: React.FC<NavigationWrapperProps> = ({
-  actions = 'editor-less',
-  onMenuToggle,
-  children
-}) => {
-  const ref = useRef<HTMLElement>();
+export const NavigationWrapper: React.FC = () => {
+  const pathname = usePathname();
+  const navigationRef = React.useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (ref.current) {
-      (ref.current as any).actions = actions;
-      
-      const handleMenuToggle = () => {
-        onMenuToggle?.();
-      };
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
 
-      ref.current.addEventListener('menuToggle', handleMenuToggle);
-      return () => {
-        ref.current?.removeEventListener('menuToggle', handleMenuToggle);
-      };
+    // Register Lit components
+    registerLitComponents();
+
+    // Initialize the Lit component
+    const navigation = document.createElement('app-navigation');
+    navigation.setAttribute('current-path', pathname);
+
+    // Append the navigation element
+    if (navigationRef.current) {
+      navigationRef.current.appendChild(navigation);
     }
-  }, [actions, onMenuToggle]);
 
-  return (
-    <app-navigation ref={ref}>
-      {children}
-    </app-navigation>
-  );
+    // Cleanup function
+    return () => {
+      if (navigationRef.current && navigation.parentNode === navigationRef.current) {
+        navigationRef.current.removeChild(navigation);
+      }
+    };
+  }, [pathname]);
+
+  return <div ref={navigationRef} />;
 }; 

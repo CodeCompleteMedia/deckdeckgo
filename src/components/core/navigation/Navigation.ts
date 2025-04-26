@@ -1,12 +1,11 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
 
-@customElement('app-navigation')
-export class Navigation extends LitElement {
+class Navigation extends LitElement {
   static styles = css`
     :host {
       display: block;
       width: 100%;
+      background-color: #1f2937;
     }
 
     .navigation {
@@ -14,8 +13,8 @@ export class Navigation extends LitElement {
       align-items: center;
       justify-content: space-between;
       padding: 1rem;
-      background: var(--deckdeckgo-navigation-background, #ffffff);
-      box-shadow: var(--deckdeckgo-navigation-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .start, .end {
@@ -39,39 +38,79 @@ export class Navigation extends LitElement {
       height: 24px;
       fill: currentColor;
     }
+
+    .nav-link {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #d1d5db;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover {
+      background-color: #374151;
+      color: #ffffff;
+    }
+
+    .nav-link.active {
+      background-color: #111827;
+      color: #ffffff;
+    }
   `;
 
-  @property({ type: String })
-  actions: 'all' | 'none' | 'editor-less' = 'editor-less';
+  static properties = {
+    currentPath: { 
+      type: String,
+      attribute: 'current-path',
+      reflect: true
+    }
+  };
 
-  @state()
+  private _currentPath = '/';
+
+  get currentPath() {
+    return this._currentPath;
+  }
+
+  set currentPath(value: string) {
+    const oldValue = this._currentPath;
+    this._currentPath = value;
+    this.requestUpdate('currentPath', oldValue);
+  }
+
   private hideAnnouncement = localStorage.getItem('deckdeckgo-hide-announcement') !== null;
 
-  private toggleMenu() {
-    this.dispatchEvent(new CustomEvent('menuToggle'));
+  private getLinkClass(path: string) {
+    return this.currentPath === path ? 'nav-link active' : 'nav-link';
   }
 
   render() {
     return html`
-      <div class="navigation">
+      <nav class="navigation">
         <div class="start">
-          <button class="menu-button" @click=${this.toggleMenu} aria-label="Menu">
-            <svg class="menu-icon" viewBox="0 0 24 24">
-              <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-            </svg>
-          </button>
-          ${this.actions === 'all' ? html`<slot name="start"></slot>` : null}
+          <a href="/dashboard" class=${this.getLinkClass('/dashboard')}>Dashboard</a>
+          <a href="/editor" class=${this.getLinkClass('/editor')}>Editor</a>
+          <a href="/templates" class=${this.getLinkClass('/templates')}>Templates</a>
         </div>
         <div class="end">
-          ${this.actions !== 'none' ? html`<slot name="end"></slot>` : null}
+          <slot name="end"></slot>
         </div>
-      </div>
+      </nav>
     `;
   }
+}
+
+// Register the custom element
+if (typeof window !== 'undefined') {
+  customElements.define('app-navigation', Navigation);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
     'app-navigation': Navigation;
   }
-} 
+}
+
+export { Navigation }; 

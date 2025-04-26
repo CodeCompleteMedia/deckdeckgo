@@ -1,55 +1,41 @@
 {
-  "name": "deckdeckgo",
-  "version": "7.1.0",
-  "author": "David Dal Busco",
-  "description": "The web open source editor for presentations",
+  "name": "deckdeckgo-next",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "ic:install:data": "node canisters/scripts/ic.installcode.mjs",
-    "ic:types": "node ./canisters/scripts/ic.types.js",
-    "build": "npm run ic:types && cd studio && npm run build:ic",
-    "postbuild": "prettier --write providers/ic",
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug"
-  },
-  "workspaces": [
-    "providers/*",
-    "webcomponents/*",
-    "templates/*",
-    "utils/*"
-  ],
-  "devDependencies": {
-    "@stencil/core": "^2.17.4",
-    "@stencil/postcss": "^2.1.0",
-    "@stencil/sass": "^1.5.2",
-    "@types/jest": "^26.0.24",
-    "@types/puppeteer": "5.4.4",
-    "autoprefixer": "^10.4.8",
-    "esbuild": "^0.14.10",
-    "husky": "^7.0.4",
-    "jest": "^27.4.7",
-    "jest-cli": "^27.4.7",
-    "node-fetch": "^3.1.1",
-    "prettier": "^2.7.1",
-    "prettier-plugin-organize-imports": "^3.1.1",
-    "pretty-quick": "^3.1.3",
-    "puppeteer": "^13.1.3",
-    "typescript": "^4.4.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/deckgo/deckdeckgo.git"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+    "lint": "next lint"
   },
   "dependencies": {
-    "@deckdeckgo/utils": "file:utils/utils"
+    "@auth/core": "^0.39.0",
+    "@heroicons/react": "^2.2.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/uuid": "^10.0.0",
+    "clsx": "^2.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "lit": "^3.3.0",
+    "next": "15.3.1",
+    "next-auth": "^4.24.11",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.2.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^20.17.31",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "10.4.16",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.1",
+    "postcss": "8.4.31",
+    "tailwindcss": "3.3.0",
+    "typescript": "^5"
   }
 }

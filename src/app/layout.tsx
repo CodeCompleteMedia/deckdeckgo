@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { SessionProvider } from '@/components/providers/SessionProvider';
 import { NavigationWrapper } from '@/components/core/navigation/NavigationWrapper';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'DeckDeckGo - The web open source editor for presentations',
-  description: 'Create, present and share your slides as Progressive Web Apps',
+  title: 'DeckDeckGo',
+  description: 'Create and share beautiful presentations',
 };
 
 export default function RootLayout({
@@ -18,15 +19,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NavigationWrapper>
-          <div slot="start">
-            {/* Add navigation start content here */}
+        <SessionProvider>
+          <div className="min-h-screen bg-gray-50">
+            <NavigationWrapper />
+            <main>{children}</main>
           </div>
-          <div slot="end">
-            {/* Add navigation end content here */}
-          </div>
-        </NavigationWrapper>
-        {children}
+        </SessionProvider>
       </body>
     </html>
   );

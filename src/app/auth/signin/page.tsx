@@ -1,18 +1,24 @@
+'use client';
+
+import { getProviders } from 'next-auth/react';
 import { SignInWrapper } from '@/components/auth/SignInWrapper';
-import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
-import { authOptions } from '@/lib/auth/config';
+import { useEffect, useState } from 'react';
 
-export default async function SignInPage() {
-  const session = await getServerSession(authOptions);
+export default function SignInPage() {
+  const [providers, setProviders] = useState<any>(null);
 
-  if (session) {
-    redirect('/');
+  useEffect(() => {
+    const fetchProviders = async () => {
+      const providers = await getProviders();
+      setProviders(providers);
+    };
+
+    fetchProviders();
+  }, []);
+
+  if (!providers) {
+    return <div>Loading...</div>;
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <SignInWrapper />
-    </div>
-  );
+  return <SignInWrapper providers={providers} />;
 } 

@@ -1,25 +1,31 @@
+'use client';
+
 import React, { useEffect, useRef } from 'react';
 import { SignIn } from './SignIn';
 
 interface SignInWrapperProps {
-  onSignInError?: (error: Error) => void;
+  providers: any;
 }
 
-export const SignInWrapper: React.FC<SignInWrapperProps> = ({ onSignInError }) => {
-  const ref = useRef<HTMLElement>();
+export const SignInWrapper: React.FC<SignInWrapperProps> = ({ providers }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (ref.current) {
-      const handleSignInError = (event: CustomEvent) => {
-        onSignInError?.(event.detail);
-      };
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        // Handle click outside
+      }
+    };
 
-      ref.current.addEventListener('signInError', handleSignInError as EventListener);
-      return () => {
-        ref.current?.removeEventListener('signInError', handleSignInError as EventListener);
-      };
-    }
-  }, [onSignInError]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
-  return <app-signin ref={ref} />;
+  return (
+    <div ref={wrapperRef}>
+      <SignIn providers={providers} />
+    </div>
+  );
 }; 
